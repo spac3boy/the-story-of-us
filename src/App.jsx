@@ -4,7 +4,13 @@ import DATA from "./data.js";
 // Lightweight privacy only. Change this value before sharing the site.
 export const ANNIVERSARY_PASSWORD = "allyouneedislove";
 const RESET_TO_PASSWORD_ON_REFRESH = true;
-const SONG_SRC = "/assets/audio/contigo-karla.mp3";
+const withBase = (path) => {
+  if (!path) return path;
+  if (/^https?:\/\//.test(path)) return path;
+  return `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}`;
+};
+
+const SONG_SRC = withBase("/assets/audio/contigo-karla.mp3");
 const SONG_TITLE = "Contigo, Karla";
 
 /* accent -> palette mapping (CSS custom props per chapter) */
@@ -125,7 +131,7 @@ function Photo({ photo = {}, priority = false, onOpen }) {
         className="ph photo-thumb"
         type="button"
         style={{
-          "--photo-src": `url(${photo.src})`,
+          "--photo-src": `url(${withBase(photo.src)})`,
           "--photo-fit": photo.thumbFit || "cover",
           "--photo-position": photo.thumbPosition || "center",
         }}
@@ -133,7 +139,7 @@ function Photo({ photo = {}, priority = false, onOpen }) {
         aria-label={`Open full image: ${label}`}
       >
         <img
-          src={photo.src}
+          src={withBase(photo.src)}
           alt={label}
           loading={priority ? "eager" : "lazy"}
           decoding="async"
@@ -180,7 +186,7 @@ function PhotoLightbox({ photo, onClose }) {
         <button className="lightbox-close" type="button" onClick={onClose} aria-label="Close full image">
           Close
         </button>
-        <img className="lightbox-image" src={photo.src} alt={label} />
+        <img className="lightbox-image" src={withBase(photo.src)} alt={label} />
         <p className="lightbox-caption">{label}</p>
       </div>
     </div>
